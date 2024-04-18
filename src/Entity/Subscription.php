@@ -115,6 +115,12 @@ class Subscription
         return $this->users;
     }
 
+    public function setUsers(Collection $users): self
+    {
+        $this->users = $users;
+        return $this;
+    }
+
     public function addUser(User $user): static
     {
         if (!$this->users->contains($user)) {
