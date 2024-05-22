@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generate PDF</title>
+</head>
+<body>
+<h1>Convertir une URL en PDF</h1>
+<form action="{{ path('app_submit_pdf') }}" method="post">
+    <label for="url">URL:</label>
+    <input type="text" id="url" name="url" required>
+    <button type="submit">Convertir en PDF</button>
+</form>
+</body>
+</html>
