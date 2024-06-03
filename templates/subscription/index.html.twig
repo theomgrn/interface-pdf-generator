@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello SubscriptionController!{% endblock %}
+
+{% block head %}
+    <style>
+        .subscription-list{
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        .subscription-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 20vw; /* Correction de "20dvw" à "20vw" */
+        }
+
+        .subscription-card button {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="example-wrapper">
+        <h1>Abonnements</h1>
+        <br />
+
+        <ul class="subscription-list">
+            {% for subscription in subscriptions %}
+                <li class="subscription-card">
+                    <strong>{{ subscription.getTitle() }}</strong>
+                    <br />
+                    <span>{{ subscription.getDescription() }}</span>
+                    <span>Générations: <b>{{ subscription.getPdfLimit() }}</b></span>
+                    <span>Prix: <b>{{ subscription.getPrice() }}€</b></span>
+                    <br />
+                    <form action="{{ path('update_subscription', {id: subscription.getId()}) }}" method="post">
+                        <button type="submit">Souscrire</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

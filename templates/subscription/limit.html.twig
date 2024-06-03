@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello SubscriptionController!{% endblock %}
+
+{% block body %}
+    <style>
+        .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+        .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+    </style>
+
+    <div class="example-wrapper">
+        <strong class="subscription-error">Vous avez atteint la limite de génération de pdf, améliorez votre abonnement pour continuer.</strong><br />
+        <h1>Abonnements</h1>
+        <br />
+
+        <ul class="subscription-list">
+            {% for subscription in subscriptions %}
+                <li class="subscription-card">
+                    <strong>{{ subscription.getTitle() }}</strong>
+                    <br />
+                    <span>{{ subscription.getDescription() }}</span>
+                    <span>Générations: <b>{{ subscription.getPdfLimit() }}</b></span>
+                    <span>Prix: <b>{{ subscription.getPrice() }}€</b></span>
+                    <br />
+                    <form action="{{ path('update_subscription', {id: subscription.getId()}) }}" method="post">
+                        <button type="submit">Souscrire</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <style>
+        .subscription-error {
+            color: red;
+        }
+        .subscription-list{
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        .subscription-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 20dvw;
+        }
+
+        .subscription-card button {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+{% endblock %}
