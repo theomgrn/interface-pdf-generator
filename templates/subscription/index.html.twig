@@ -1,56 +1,94 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello SubscriptionController!{% endblock %}
+{% block title %}Abonnements{% endblock %}
 
-{% block head %}
-    <style>
-        .subscription-list{
-            list-style: none;
-            display: flex;
-            gap: 20px;
-        }
-
-        .subscription-card {
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            width: 20vw; /* Correction de "20dvw" à "20vw" */
-        }
-
-        .subscription-card button {
-            margin-top: 10px;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-    </style>
+{% block stylesheets %}
 {% endblock %}
 
 {% block body %}
-    <div class="example-wrapper">
-        <h1>Abonnements</h1>
-        <br />
-
+    <div class="subscription-container">
+        <h1 class="subscription-heading">Abonnements</h1>
         <ul class="subscription-list">
             {% for subscription in subscriptions %}
                 <li class="subscription-card">
+                    <strong>{{ subscription.getPdfLimit() }}€</strong>
+                    <hr style="width: 100%;">
                     <strong>{{ subscription.getTitle() }}</strong>
-                    <br />
                     <span>{{ subscription.getDescription() }}</span>
                     <span>Générations: <b>{{ subscription.getPdfLimit() }}</b></span>
                     <span>Prix: <b>{{ subscription.getPrice() }}€</b></span>
-                    <br />
                     <form action="{{ path('update_subscription', {id: subscription.getId()}) }}" method="post">
-                        <button type="submit">Souscrire</button>
+                        <button type="submit">SOUSCRIRE</button>
                     </form>
                 </li>
             {% endfor %}
         </ul>
     </div>
+    <style>
+
+        hr{
+            border-color: #676E5F;
+        }
+
+        .subscription-heading {
+            color: #CBBEB7;
+        }
+        .subscription-container {
+            padding: 20px;
+            background-color: #676E5F;
+            color: #282828;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .subscription-list {
+            list-style: none;
+            padding: 0;
+            width: 100vw;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .subscription-card {
+            border: 1px solid #CBBEB7;
+            border-radius: 5px;
+            padding: 20px;
+            flex: 0 0 calc(30% - 40px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .subscription-card strong {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .subscription-card span {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .subscription-card button {
+            padding: 30px 40px;
+            font-size: 1.5em;
+            background-color: #676E5F;
+            color: #CBBEB7;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+
+        .subscription-card button:hover {
+            background-color: #CBBEB7;
+            color: #676E5F;
+        }
+    </style>
 {% endblock %}

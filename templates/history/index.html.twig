@@ -2,20 +2,50 @@
 
 {% block title %}History{% endblock %}
 
+{% block stylesheets %}
+
+{% endblock %}
+
 {% block body %}
-    <h1>Historique</h1>
-    <h2>Liste des fichiers</h2>
-    <ul class="files">
-        {% for fileUrl in fileUrls %}
-            <li><a href="{{ fileUrl }}" target="_blank">{{ relativePaths[loop.index0] }}</a></li>
-        {% else %}
-            <li>Aucun fichier trouvé.</li>
-        {% endfor %}
-    </ul>
+    <div class="history-container">
+        <h1 class="history-heading">Historique</h1>
+        <h2>Liste des fichiers</h2>
+        <ul class="history-list">
+            {% for fileUrl in fileUrls %}
+                <li class="history-list-item"><a href="{{ fileUrl }}" target="_blank">{{ relativePaths[loop.index0] }}</a></li>
+            {% else %}
+                <li class="history-list-item error">Aucun fichier trouvé.</li>
+            {% endfor %}
+        </ul>
+    </div>
     <style>
-        .files {
-            padding: 10px;
-            list-style: inside;
+        .history-container {
+            background-color: #676E5F;
+            color: #CBBEB7;
+            height: 100vh;
+            padding: 50px;
+            text-align: center;
+        }
+
+        .history-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .history-list-item {
+            margin-bottom: 10px;
+        }
+
+        .history-list-item a {
+            color: #CBBEB7;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .history-list-item a:hover {
+            color: #fff;
         }
     </style>
 {% endblock %}

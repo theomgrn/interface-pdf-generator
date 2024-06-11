@@ -13,8 +13,13 @@ class UserController extends AbstractController
     #[Route('/userpage', name: 'user_page')]
     public function index(Request $request, EntityManagerInterface $entityManager): Response
     {
+        $user = $this->getUser();
+        $maxPdfLimit = $user->getSubscriptionId()->getPdfLimit();
+        $currentPdfCount = $user->getPdfLimit();
 
         return $this->render('user/index.html.twig', [
+            'maxPdfLimit' => $maxPdfLimit,
+            'currentPdfCount' => $currentPdfCount,
             'controller_name' => 'UserPageController',
         ]);
     }
