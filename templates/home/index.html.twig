@@ -1,7 +1,89 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Accueil{% endblock %}
+
+{% block stylesheets %}
+{% endblock %}
 
 {% block body %}
-    <h1>Welcome to the Home Page</h1>
+    <div class="home-hero-section">
+        <div class="home-hero-content">
+            <h1>Transformez vos URL en PDF</h1>
+            <p>Convertissez n'importe quelle page web en un document PDF en un seul clic</p>
+            <a href="{{ path('app_generate_pdf') }}" class="btnhome">COMMENCER</a>
+        </div>
+    </div>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            color: #282828;
+        }
+
+        .home-hero-section {
+            background-image: url('./background.svg');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #CBBEB7;
+        }
+
+        .home-hero-content h1 {
+            font-size: 3em;
+            margin: 0 0 20px;
+        }
+
+        .home-hero-content{
+            padding: 10em;
+            border: 2px solid #fff;
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .home-hero-content p {
+            font-size: 1.2em;
+            margin-bottom: 40px;
+            color: #CBBEB7;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+            }
+            50% {
+                transform: scale(2);
+                box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+            }
+        }
+
+        .btnhome {
+            padding: 20px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+            background-color: #282828;
+            color: #fff;
+            transition: background-color 0.3s;
+            animation: pulse 1.5s infinite; /* Appliquer l'animation infinie */
+        }
+
+        .btnhome:hover {
+            background-color: #000000;
+        }
+
+    </style>
 {% endblock %}

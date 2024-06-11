@@ -1,32 +1,121 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello SubscriptionController!{% endblock %}
+{% block title %}Limite atteinte{% endblock %}
+
+{% block stylesheets %}
+{% endblock %}
 
 {% block body %}
-{#    <style>#}
-{#        .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }#}
-{#        .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }#}
-{#    </style>#}
-
-    <div class="example-wrapper">
-        <strong>Vous avez atteint la limite de génération de pdf, améliorez votre abonnement pour continuer.</strong><br />
-        <h1>Abonnements :</h1>
-        <br />
-
-        <ul>
+    <div class="limit-container">
+        <strong class="limit-error">Vous avez atteint la limite de génération de pdf, améliorez votre abonnement pour continuer.</strong>
+        <h1 class="limit-heading">Abonnements</h1>
+        <ul class="limit-list">
             {% for subscription in subscriptions %}
-                <li>
-                    <strong>{{ subscription.getTitle() }}</strong>
-                    <br />
-                    <span>{{ subscription.getDescription() }}</span>
-                    <span>Générations: <b>{{ subscription.getPdfLimit() }}</b></span>
-                    <span>Prix: <b>{{ subscription.getPrice() }}€</b></span>
-                    <br />
+                <li class="limit-card">
+                    <strong class="limit-price">{{ subscription.getPrice() }}€</strong>
+                    <hr class="limit-divider">
+                    <strong class="limit-title">{{ subscription.getTitle() }}</strong>
+                    <span class="limit-description">{{ subscription.getDescription() }}</span>
+                    <span class="limit-generation">Générations: <b>{{ subscription.getPdfLimit() }}</b></span>
                     <form action="{{ path('update_subscription', {id: subscription.getId()}) }}" method="post">
-                        <button type="submit">Souscrire</button>
+                        <button type="submit" class="limit-button">Souscrire</button>
                     </form>
                 </li>
             {% endfor %}
         </ul>
     </div>
+    <style>
+        .limit-container {
+            padding: 20px;
+            background-color: #676E5F;
+            color: #CBBEB7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .limit-error {
+            color: #FF0000;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .limit-heading {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #fff;
+        }
+
+        .limit-list {
+            list-style: none;
+            padding: 0;
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .limit-card {
+            border: 1px solid #CBBEB7;
+            border-radius: 5px;
+            padding: 20px;
+            flex: 0 0 calc(30% - 40px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .limit-price {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .limit-divider {
+            border-color: #CBBEB7;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .limit-title {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .limit-description {
+            font-size: 1em;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .limit-generation {
+            font-size: 1em;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .limit-button {
+            padding: 10px 20px;
+            font-size: 1.2em;
+            background-color: #282828;
+            color: #CBBEB7;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .limit-button:hover {
+            background-color: #CBBEB7;
+            color: #282828;
+        }
+    </style>
 {% endblock %}

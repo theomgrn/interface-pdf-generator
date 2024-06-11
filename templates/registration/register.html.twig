@@ -3,17 +3,95 @@
 {% block title %}Register{% endblock %}
 
 {% block body %}
-    <h1>Register</h1>
+    <div class="register-back">
+        <div class="register-container">
+            <h1 class="register-heading">Inscription</h1>
 
-    {{ form_errors(registrationForm) }}
+            <div class="register-form-container">
+                {{ form_errors(registrationForm) }}
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+                {{ form_start(registrationForm) }}
+                <div class="register-form-group">
+                    {{ form_row(registrationForm.email, {'attr': {'class': 'register-input'}}) }}
+                </div>
+                <div class="register-form-group">
+                    {{ form_row(registrationForm.plainPassword, {'label': 'Mot de passe', 'attr': {'class': 'register-input'}}) }}
+                </div>
+                <div class="register-form-group">
+                    {{ form_row(registrationForm.agreeTerms, {'attr': {'class': 'register-checkbox'}}) }}
+                </div>
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+                <button type="submit" class="register-btn">S'INSCRIRE</button>
+                {{ form_end(registrationForm) }}
+            </div>
+        </div>
+    </div>
+    <style>
+        .register-back {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #282828;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .register-container {
+            background-color: #676E5F;
+            padding: 20px;
+            border-radius: 5px;
+            color: #CBBEB7;
+            width: 50vw;
+            max-width: 600px;
+        }
+
+        .register-heading {
+            margin-bottom: 20px;
+            font-size: 2.5em;
+        }
+
+        .register-form-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .register-form-group {
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .register-input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #CBBEB7;
+            background-color: #CBBEB7;
+            color: #282828;
+        }
+
+        .register-checkbox {
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .register-btn {
+            padding: 10px 20px;
+            font-size: 1.2em;
+            background-color: #282828;
+            color: #CBBEB7;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .register-btn:hover {
+            background-color: #CBBEB7;
+            color: #282828;
+        }
+    </style>
 {% endblock %}

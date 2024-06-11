@@ -2,12 +2,62 @@
 
 {% block title %}Generate PDF{% endblock %}
 
+{% block stylesheets %}
+
+{% endblock %}
+
 {% block body %}
-    <h1>Convertir une URL en PDF</h1>
-    <p>Vous pouvez encore générer {{ maxPdfLimit - currentPdfCount }} PDFs.</p>
-    <form action="{{ path('app_submit_pdf') }}" method="post">
-        <label for="url">URL:</label>
-        <input type="text" id="url" name="url" required>
-        <button type="submit">Convertir en PDF</button>
-    </form>
+    <div class="generate-container">
+        <div>
+            <h1>Convertir une URL en PDF</h1>
+            <p>Vous pouvez encore générer {{ maxPdfLimit - currentPdfCount }} PDFs.</p>
+            <form class="generate-form" action="{{ path('app_submit_pdf') }}" method="post">
+                <input type="text" id="url" name="url" placeholder="Entrez l'URL" required>
+                <button type="submit" class="generate-btn-primary">Convertir en PDF</button>
+            </form>
+        </div>
+    </div>
+    <style>
+        .generate-container {
+            background-color: #676E5F;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #CBBEB7;
+        }
+
+        .generate-form {
+            display: flex;
+            width: 50vw;
+            align-items: center;
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .generate-form input[type="text"] {
+            border: none;
+            padding: 10px;
+            border-radius: 5px 0 0 5px;
+            outline: none;
+            flex: 1;
+        }
+
+        .generate-form button {
+            border: none;
+            padding: 10px 20px;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            background-color: #282828;
+            color: #fff;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .generate-form button:hover {
+            background-color: #000000;
+        }
+    </style>
 {% endblock %}

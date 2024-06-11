@@ -17,8 +17,56 @@
 
             <div class="user-subscription">
                 <h2 class="user-subscription-title">{{ app.user.subscriptionId.title }}</h2>
-                <p>PDF générable : {{ app.user.pdfLimit }}</p>
+                <p>Vous pouvez encore générer {{ maxPdfLimit - currentPdfCount }} PDFs.</p>
             </div>
         </div>
     </div>
+    <style>
+        .user-back {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .user-container {
+            background-color: #282828 ;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .user-info {
+            margin-bottom: 20px;
+            width: 80vw;
+        }
+
+        .user-info p{
+            color: #CBBEB7;
+        }
+        .user-info img {
+            width: 150px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        .user-subscription {
+            width: 80vw;
+            background-color: #676E5F;
+            color: #CBBEB7;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .user-subscription-title {
+            padding: 0 !important;
+            font-size: 40px;
+            text-transform: uppercase;
+        }
+    </style>
+
 {% endblock %}
