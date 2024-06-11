@@ -23,8 +23,10 @@
 </nav>
 <div class="top-right">
     {% if app.user %}
+        <a href="{{ path('user_page') }}" class="btn btn-primary">Mon compte</a>
         <a href="{{ path('app_logout') }}" class="btn btn-primary">Logout</a>
     {% else %}
+        <a href="{{ path('app_register') }}" class="btn btn-primary">Register</a>
         <a href="{{ path('app_login') }}" class="btn btn-primary">Login</a>
     {% endif %}
 </div>

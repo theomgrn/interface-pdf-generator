@@ -3,11 +3,11 @@
 {% block title %}History{% endblock %}
 
 {% block body %}
-    <h1>{{ controller_name }}</h1>
+    <h1>Historique</h1>
     <h2>Liste des fichiers</h2>
     <ul class="files">
-        {% for file in files %}
-            <li><a href="{{ file }}" target="_blank">{{ displayedUrls[loop.index0] }}</a></li>
+        {% for fileUrl in fileUrls %}
+            <li><a href="{{ fileUrl }}" target="_blank">{{ relativePaths[loop.index0] }}</a></li>
         {% else %}
             <li>Aucun fichier trouvé.</li>
         {% endfor %}

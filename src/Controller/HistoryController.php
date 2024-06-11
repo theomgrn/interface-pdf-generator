@@ -9,58 +9,58 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class HistoryController extends AbstractController
 {
-    private KernelInterface $kernel;
+    private KernelInterface $kernelInterface;
 
-    public function __construct(KernelInterface $kernel)
+    public function __construct(KernelInterface $kernelInterface)
     {
-        $this->kernel = $kernel;
+        $this->kernelInterface = $kernelInterface;
     }
 
     #[Route('/history', name: 'history')]
     public function index(): Response
     {
         // Supposons que vous ayez une méthode pour obtenir l'ID de l'utilisateur actuel
-        $userId = $this->getUser()->getId();
+        $currentUserId = $this->getUser()->getId();
 
         // Chemin vers le répertoire des fichiers de l'utilisateur
-        $directoryPath = $this->kernel->getProjectDir() . '/public/pdfs/' . $userId;
+        $userFilesDirectory = $this->kernelInterface->getProjectDir() . '/public/pdfs/' . $currentUserId;
 
         // S'assurer que le répertoire existe et est lisible
-        if (is_dir($directoryPath)) {
+        if (is_dir($userFilesDirectory)) {
             // Récupérer la liste des fichiers
-            $files = array_diff(scandir($directoryPath), ['.', '..']);
+            $userFiles = array_diff(scandir($userFilesDirectory), ['.', '..']);
 
             // Optionnel: transformer le chemin relatif en URL publiable
             $fileUrls = [];
-            $displayedUrls = [];
-            foreach ($files as $file) {
-                $fileUrls[] = $this->generateUrl('kernel_absolute_path', ['userId' => $userId, 'fileName' => $file]);
-                $displayedUrls[] = $userId . '/' . $file;
+            $relativePaths = [];
+            foreach ($userFiles as $fileName) {
+                $fileUrls[] = $this->generateUrl('document_absolute_path', ['userId' => $currentUserId, 'fileName' => $fileName]);
+                $relativePaths[] = $currentUserId . '/' . $fileName;
             }
         } else {
             // Gérer le cas où le répertoire n'existe pas
             $fileUrls = [];
-            $displayedUrls = [];
+            $relativePaths = [];
         }
 
         return $this->render('history/index.html.twig', [
-            'controller_name' => 'HistoryController',
-            'files' => $fileUrls,
-            'displayedUrls' => $displayedUrls
+            'controller_name' => 'DocumentHistoryController',
+            'fileUrls' => $fileUrls,
+            'relativePaths' => $relativePaths
         ]);
     }
 
-    #[Route('/history/absolute/{userId}/{fileName}', name: 'kernel_absolute_path')]
-    public function getKernelAbsolutePath(string $userId, string $fileName): Response
+    #[Route('/history/absolute/{userId}/{fileName}', name: 'document_absolute_path')]
+    public function getAbsoluteFilePath(string $userId, string $fileName): Response
     {
-        $directoryPath = $this->kernel->getProjectDir() . '/public/pdfs/' . $userId . '/' . $fileName;
+        $filePath = $this->kernelInterface->getProjectDir() . '/public/pdfs/' . $userId . '/' . $fileName;
 
         // S'assurer que le fichier existe
-        if (!file_exists($directoryPath)) {
+        if (!file_exists($filePath)) {
             throw $this->createNotFoundException('Le fichier demandé n\'existe pas');
         }
 
         // Retourner le fichier
-        return $this->file($directoryPath);
+        return $this->file($filePath);
     }
 }
