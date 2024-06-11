@@ -11,10 +11,11 @@
         <div>
             <h1>Convertir une URL en PDF</h1>
             <p>Vous pouvez encore générer {{ maxPdfLimit - currentPdfCount }} PDFs.</p>
-            <form class="generate-form" action="{{ path('app_submit_pdf') }}" method="post">
+            <form class="generate-form" action="{{ path('app_submit_pdf') }}" method="post" id="generate-form">
                 <input type="text" id="url" name="url" placeholder="Entrez l'URL" required>
-                <button type="submit" class="generate-btn-primary">Convertir en PDF</button>
+                <button type="submit" class="generate-btn-primary" id="generate-btn">Convertir en PDF</button>
             </form>
+            <div id="loading" style="display: none;">Génération en cours...</div>
         </div>
     </div>
     <style>
@@ -56,8 +57,32 @@
             transition: background-color 0.3s;
         }
 
+        .generate-form button:disabled {
+            background-color: #aaa;
+            cursor: not-allowed;
+        }
+
         .generate-form button:hover {
             background-color: #000000;
         }
+
+        #loading {
+            margin-top: 10px;
+            font-size: 16px;
+            color: #fff;
+        }
     </style>
+    <script>
+        document.getElementById('generate-form').addEventListener('submit', function() {
+            document.getElementById('generate-btn').disabled = true;
+            document.getElementById('loading').style.display = 'block';
+        });
+
+        function clearIndicators() {
+            document.getElementById('generate-btn').disabled = false;
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        setTimeout(clearIndicators, 5000);
+    </script>
 {% endblock %}
