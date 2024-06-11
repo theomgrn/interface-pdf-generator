@@ -14,6 +14,11 @@ class UserController extends AbstractController
     public function index(Request $request, EntityManagerInterface $entityManager): Response
     {
         $user = $this->getUser();
+
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
         $maxPdfLimit = $user->getSubscriptionId()->getPdfLimit();
         $currentPdfCount = $user->getPdfLimit();
 

@@ -19,18 +19,13 @@ class HistoryController extends AbstractController
     #[Route('/history', name: 'history')]
     public function index(): Response
     {
-        // Supposons que vous ayez une méthode pour obtenir l'ID de l'utilisateur actuel
         $currentUserId = $this->getUser()->getId();
 
-        // Chemin vers le répertoire des fichiers de l'utilisateur
         $userFilesDirectory = $this->kernelInterface->getProjectDir() . '/public/pdfs/' . $currentUserId;
 
-        // S'assurer que le répertoire existe et est lisible
         if (is_dir($userFilesDirectory)) {
-            // Récupérer la liste des fichiers
             $userFiles = array_diff(scandir($userFilesDirectory), ['.', '..']);
 
-            // Optionnel: transformer le chemin relatif en URL publiable
             $fileUrls = [];
             $relativePaths = [];
             foreach ($userFiles as $fileName) {
@@ -38,7 +33,6 @@ class HistoryController extends AbstractController
                 $relativePaths[] = $currentUserId . '/' . $fileName;
             }
         } else {
-            // Gérer le cas où le répertoire n'existe pas
             $fileUrls = [];
             $relativePaths = [];
         }
@@ -55,12 +49,10 @@ class HistoryController extends AbstractController
     {
         $filePath = $this->kernelInterface->getProjectDir() . '/public/pdfs/' . $userId . '/' . $fileName;
 
-        // S'assurer que le fichier existe
         if (!file_exists($filePath)) {
             throw $this->createNotFoundException('Le fichier demandé n\'existe pas');
         }
 
-        // Retourner le fichier
         return $this->file($filePath);
     }
 }
