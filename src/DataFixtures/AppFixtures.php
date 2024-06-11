@@ -14,30 +14,40 @@ class AppFixtures extends Fixture
         $manager->flush();
     }
 
-    public function loadSubscriptions(ObjectManager $manager): void {
-        $subscription1 = new Subscription();
-        $subscription1->setTitle('Free');
-        $subscription1->setDescription('Free subscription');
-        $subscription1->setPdfLimit(3);
-        $subscription1->setPrice(0);
-        $subscription1->setMedia('');
+    public function loadSubscriptions(ObjectManager $manager): void
+    {
+        $subscriptions = [
+            [
+                'title' => 'Free',
+                'description' => 'Abonnement GRATUIT',
+                'pdfLimit' => 3,
+                'price' => 0,
+                'media' => '',
+            ],
+            [
+                'title' => 'Premium',
+                'description' => 'Abonnement PREMIUM',
+                'pdfLimit' => 10,
+                'price' => 2,
+                'media' => '',
+            ],
+            [
+                'title' => 'Pro',
+                'description' => 'Abonnement PRO',
+                'pdfLimit' => 20,
+                'price' => 10,
+                'media' => '',
+            ],
+        ];
 
-        $subscription2 = new Subscription();
-        $subscription2->setTitle('Premium');
-        $subscription2->setDescription('Premium subscription');
-        $subscription2->setPdfLimit(10);
-        $subscription2->setPrice(2);
-        $subscription2->setMedia('');
-
-        $subscription3 = new Subscription();
-        $subscription3->setTitle('Pro');
-        $subscription3->setDescription('Pro subscription');
-        $subscription3->setPdfLimit(20);
-        $subscription3->setPrice(10);
-        $subscription3->setMedia('');
-
-        $manager->persist($subscription1);
-        $manager->persist($subscription2);
-        $manager->persist($subscription3);
+        foreach ($subscriptions as $data) {
+            $subscription = new Subscription();
+            $subscription->setTitle($data['title']);
+            $subscription->setDescription($data['description']);
+            $subscription->setPdfLimit($data['pdfLimit']);
+            $subscription->setPrice($data['price']);
+            $subscription->setMedia($data['media']);
+            $manager->persist($subscription);
+        }
     }
 }

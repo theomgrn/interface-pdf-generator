@@ -2,9 +2,9 @@
 
 namespace App\Controller;
 
-use AllowDynamicProperties;
+use App\Entity\Pdf;
 use App\Service\PdfGenerationService;
-use DateTime;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,73 +13,75 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
-#[AllowDynamicProperties] class GeneratePdfController extends AbstractController
+class GeneratePdfController extends AbstractController
 {
     private string $apiUrl;
-    private PdfGenerationService $service;
+    private PdfGenerationService $pdfGenerationService;
     private Filesystem $filesystem;
+    private EntityManagerInterface $entityManager;
 
-    public function __construct(ParameterBagInterface $params, PdfGenerationService $service, Filesystem $filesystem, EntityManagerInterface $entityManager)
-    {
-        $this->service = $service;
+    public function __construct(
+        ParameterBagInterface $params,
+        PdfGenerationService $pdfGenerationService,
+        Filesystem $filesystem,
+        EntityManagerInterface $entityManager
+    ) {
+        $this->pdfGenerationService = $pdfGenerationService;
         $this->apiUrl = $params->get('symfony_api');
         $this->filesystem = $filesystem;
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * Affiche le formulaire de génération de PDF
-     *
-     * @Route('/generate/pdf', name: 'app_generate_pdf')
-     */
     #[Route('/generate/pdf', name: 'app_generate_pdf')]
     public function form(): Response
     {
-        return $this->render('generatePdf/index.html.twig');
+        $user = $this->getUser();
+        $maxPdfLimit = $user->getSubscriptionId()->getPdfLimit();
+        $currentPdfCount = $user->getPdfLimit();
+
+        return $this->render('generatePdf/index.html.twig', [
+            'maxPdfLimit' => $maxPdfLimit,
+            'currentPdfCount' => $currentPdfCount,
+        ]);
     }
 
-    /**
-     * Soumet le formulaire et génère le PDF
-     *
-     * @Route('/generate/pdf/submit', name: 'app_submit_pdf', methods: ['POST'])]
-     */
     #[Route('/generate/pdf/submit', name: 'app_submit_pdf', methods: ['POST'])]
     public function submit(Request $request): Response
     {
-        // Si le formulaire est soumis et valide
         $user = $this->getUser();
-        if($user->getPdfLimit() >= $user->getSubscriptionId()->getPdfLimit()) {
+        if ($user->getPdfLimit() >= $user->getSubscriptionId()->getPdfLimit()) {
             return $this->redirectToRoute('upgrade_subscription');
         }
-        $user->setPdfLimit($user->getPdfLimit() + 1);
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
 
-// Récupère l'URL depuis le formulaire soumis
         $url = $request->request->get('url');
 
         try {
-// Utilise le service pour obtenir le PDF
-            $pdf = $this->service->fromUrl($url);
+            $pdfContent = $this->pdfGenerationService->fromUrl($url);
 
-            $currentDate = new DateTime();
-            $user = $this->getUser();
+            $currentDate = new DateTimeImmutable();
             $fileName = $currentDate->getTimestamp() . '.pdf';
             $publicPath = $this->getParameter('kernel.project_dir') . '/public/pdfs/' . $user->getId() . '/' . $fileName;
 
-// Assure que le répertoire existe
             $this->filesystem->mkdir(dirname($publicPath));
+            $this->filesystem->dumpFile($publicPath, $pdfContent);
 
-// Sauvegarde le fichier PDF
-            $this->filesystem->dumpFile($publicPath, $pdf);
+            // Créer un nouvel objet Pdf et le persister
+            $pdf = new Pdf();
+            $pdf->setTitle($fileName);
+            $pdf->setCreatedAt($currentDate);
+            $pdf->setUserId($user);
 
+            $this->entityManager->persist($pdf);
 
-// Retourne le PDF en tant que réponse HTTP
-            return new Response($pdf, 200, [
+            // Mettre à jour le pdfLimit de l'utilisateur
+            $user->setPdfLimit($user->getPdfLimit() + 1);
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
+
+            return new Response($pdfContent, 200, [
                 'Content-Type' => 'application/pdf',
-                'Content-Disposition' => 'inline; filename="document.pdf"',
+                'Content-Disposition' => 'inline; filename="' . $fileName . '"',
             ]);
-
         } catch (\Exception $e) {
             return new Response('Error generating PDF: ' . $e->getMessage(), 500);
         }

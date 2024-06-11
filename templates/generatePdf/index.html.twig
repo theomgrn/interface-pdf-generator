@@ -4,6 +4,7 @@
 
 {% block body %}
     <h1>Convertir une URL en PDF</h1>
+    <p>Vous pouvez encore générer {{ maxPdfLimit - currentPdfCount }} PDFs.</p>
     <form action="{{ path('app_submit_pdf') }}" method="post">
         <label for="url">URL:</label>
         <input type="text" id="url" name="url" required>
